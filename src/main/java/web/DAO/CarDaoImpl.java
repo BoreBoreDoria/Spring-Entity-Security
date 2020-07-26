@@ -19,8 +19,7 @@ public class CarDaoImpl implements CarDAO {
     @Override
     @SuppressWarnings("unchecked")
     public List<Car> allCar() {
-        Session session = sessionFactory.getCurrentSession();
-        TypedQuery<Car> query=session.createQuery("from Car");
+        TypedQuery<Car> query=sessionFactory.getCurrentSession().createQuery("from Car");
         return query.getResultList();
     }
 
