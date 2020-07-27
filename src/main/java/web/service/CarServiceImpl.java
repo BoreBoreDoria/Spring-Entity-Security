@@ -1,16 +1,18 @@
 package web.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import web.DAO.CarDAO;
-import web.DAO.CarDaoImpl;
 import web.model.Car;
 
 import java.util.List;
 
 @Service
 public class CarServiceImpl implements  CarService{
-    private CarDAO carDao = new CarDaoImpl();
+
+    @Autowired
+    private CarDAO carDao;
 
     @Override
     @Transactional
@@ -19,21 +21,25 @@ public class CarServiceImpl implements  CarService{
     }
 
     @Override
+    @Transactional
     public void add(Car car) {
         carDao.add(car);
     }
 
     @Override
+    @Transactional
     public void delete(Car car) {
         carDao.delete(car);
     }
 
     @Override
+    @Transactional
     public void edit(Car car) {
         carDao.edit(car);
     }
 
     @Override
+    @Transactional
     public Car getCarById(int id) {
         return carDao.getCarById(id);
     }

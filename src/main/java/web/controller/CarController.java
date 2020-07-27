@@ -14,12 +14,9 @@ import java.util.List;
 
 @Controller
 public class CarController {
-    private CarService carService;
 
     @Autowired
-    public void setCarService(CarService carService) {
-        this.carService = carService;
-    }
+    private CarService carService;
 
     @GetMapping("/")
     public ModelAndView allCars(){
@@ -51,7 +48,7 @@ public class CarController {
     public ModelAndView addPage(){
         ModelAndView  modelAndView = new ModelAndView();
         modelAndView.setViewName("addPage");
-        modelAndView.addObject("car");
+        modelAndView.addObject("car",new Car());
         return modelAndView;
     }
 
