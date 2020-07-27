@@ -11,10 +11,12 @@ import java.util.*;
 
 @Repository
 public class CarDaoImpl implements CarDAO {
-
-    @Autowired
     private SessionFactory sessionFactory;
 
+    @Autowired
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
     @Override
     @SuppressWarnings("unchecked")
