@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.springframework.org/security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <meta charset="UTF-8">
     <title>User Page</title>
@@ -10,10 +10,10 @@
 
     <h1>Hello  <span sec:authentication="name" /></h1>
 
-    <sec:authorize access="isAuthenticated()">
-        <p>Ваш логин: <sec:authentication property="principal.username" /></p>
-        <p><a class="btn btn-lg btn-danger" th:href="@{/logout}" />" role="button">Выйти</a></p>
-    </sec:authorize>
+    <div sec:authorize="isAuthenticated()">
+        <p> Ваш логин <span sec:authentication="name"></span></p>
+        <p><a class="btn btn-lg btn-danger" th:href="@{/logout}" role="button">Выйти</a></p>
+    </div>
 
 </div>
 

@@ -45,6 +45,7 @@ public class UserController {
 
     @PostMapping("/admin/edit")
     public ModelAndView editUser(@ModelAttribute("user") User user){
+        user.setRoles(userService.get(user.getId()).getRoles());
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/admin");
         userService.save(user);
@@ -60,7 +61,7 @@ public class UserController {
     }
 
     @PostMapping("/admin/add")
-    public  ModelAndView addCar(@ModelAttribute("user") User user){
+    public  ModelAndView addUser(@ModelAttribute("user") User user){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/admin");
         userService.save(user);
@@ -68,12 +69,15 @@ public class UserController {
     }
 
     @GetMapping("/admin/delete/{id}")
-    public ModelAndView deleteCar(@PathVariable("id") int id){
+    public ModelAndView deleteUser(@PathVariable("id") int id){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/admin");
         userService.delete(id);
         return modelAndView;
     }
-
+    @GetMapping("/user")
+    public String userPage(){
+        return "user";
+    }
 
 }

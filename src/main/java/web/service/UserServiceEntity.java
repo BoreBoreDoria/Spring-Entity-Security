@@ -16,36 +16,38 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-@Transactional
+
 public class UserServiceEntity implements UserDetailsService {
 
     @Autowired
     UserRepository repo;
     @Autowired
     RoleRepository rolRepo;
-
+    @Transactional
     public void save(User user) {
-        Set<Role> roles = new HashSet<>();
-        if(rolRepo.count() == 0){
+        Set<Role> roles = user.getRoles();
+        if(roles == null) {
+            roles = new HashSet<>();
             roles.add(rolRepo.findById(1L).get());
             user.setRoles(roles);
         }
         repo.save(user);
     }
-
+    @Transactional
     public List<User> listAll() {
         return (List<User>) repo.findAll();
     }
-
+    @Transactional
     public User get(long id) {
         return repo.findById(id).get();
     }
-
+    @Transactional
     public void delete(long id) {
         repo.deleteById(id);
     }
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         return listAll().stream()
