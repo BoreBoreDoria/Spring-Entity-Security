@@ -1,21 +1,35 @@
 package web.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import web.model.Role;
 import web.model.User;
+import web.repository.RoleRepository;
 import web.repository.UserRepository;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Transactional
-public class UserServiceEntity {
+public class UserServiceEntity implements UserDetailsService {
 
     @Autowired
     UserRepository repo;
+    @Autowired
+    RoleRepository rolRepo;
 
     public void save(User user) {
+        Set<Role> roles = new HashSet<>();
+        if(rolRepo.count() == 0){
+            roles.add(rolRepo.findById(1L).get());
+            user.setRoles(roles);
+        }
         repo.save(user);
     }
 
@@ -23,11 +37,20 @@ public class UserServiceEntity {
         return (List<User>) repo.findAll();
     }
 
-    public User get(int id) {
+    public User get(long id) {
         return repo.findById(id).get();
     }
 
-    public void delete(int id) {
+    public void delete(long id) {
         repo.deleteById(id);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        return listAll().stream()
+                .filter(a -> username.equals(a.getName()))
+                .findFirst()
+                .orElse(null);
     }
 }

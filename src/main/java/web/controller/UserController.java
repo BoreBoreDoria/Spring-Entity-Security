@@ -15,16 +15,26 @@ public class UserController {
     @Autowired
     private UserServiceEntity userService;
 
-    @GetMapping("/")
+    @GetMapping(value = "/")
+    public String getHomePage() {
+        return "index";
+    }
+
+    @GetMapping(value = "/login")
+    public String getLoginPage() {
+        return "login";
+    }
+
+    @GetMapping("/admin")
     public ModelAndView allUsers(){
         List<User> users = userService.listAll();
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("users");
+        modelAndView.setViewName("admin");
         modelAndView.addObject("users",users);
         return modelAndView;
     }
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/admin/edit/{id}")
     public ModelAndView editPage(@PathVariable("id") int id){
         User user = userService.get(id);
         ModelAndView modelAndView = new ModelAndView();
@@ -33,15 +43,15 @@ public class UserController {
         return modelAndView;
     }
 
-    @PostMapping("/edit")
+    @PostMapping("/admin/edit")
     public ModelAndView editUser(@ModelAttribute("user") User user){
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/");
+        modelAndView.setViewName("redirect:/admin");
         userService.save(user);
         return modelAndView;
     }
 
-    @GetMapping("/add")
+    @GetMapping("/admin/add")
     public ModelAndView addPage(){
         ModelAndView  modelAndView = new ModelAndView();
         modelAndView.setViewName("addPage");
@@ -49,20 +59,21 @@ public class UserController {
         return modelAndView;
     }
 
-    @PostMapping("/add")
+    @PostMapping("/admin/add")
     public  ModelAndView addCar(@ModelAttribute("user") User user){
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/");
+        modelAndView.setViewName("redirect:/admin");
         userService.save(user);
         return modelAndView;
     }
 
-    @GetMapping("/delete/{id}")
+    @GetMapping("/admin/delete/{id}")
     public ModelAndView deleteCar(@PathVariable("id") int id){
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/");
+        modelAndView.setViewName("redirect:/admin");
         userService.delete(id);
         return modelAndView;
     }
+
 
 }

@@ -6,8 +6,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="CRUD-Spring" />
         <module name="CRUD-Spring-Entity" />
+        <module name="CRUD-Spring-Entity-Security" />
+        <module name="CRUD-Spring" />
       </profile>
     </annotationProcessing>
   </component>
