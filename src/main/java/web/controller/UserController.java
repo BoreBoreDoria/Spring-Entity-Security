@@ -2,45 +2,42 @@ package web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import web.model.Car;
-import web.service.CarService;
+import web.model.User;
+import web.service.UserServiceEntity;
 
 import java.util.List;
 
 @Controller
-public class CarController {
+public class UserController {
 
     @Autowired
-    private CarService carService;
+    private UserServiceEntity userService;
 
     @GetMapping("/")
-    public ModelAndView allCars(){
-        List<Car> cars = carService.allCar();
+    public ModelAndView allUsers(){
+        List<User> users = userService.listAll();
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("cars");
-        modelAndView.addObject("cars",cars);
+        modelAndView.setViewName("users");
+        modelAndView.addObject("users",users);
         return modelAndView;
     }
 
     @GetMapping("/edit/{id}")
     public ModelAndView editPage(@PathVariable("id") int id){
-        Car car = carService.getCarById(id);
+        User user = userService.get(id);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("editPage");
-        modelAndView.addObject("car", car);
+        modelAndView.addObject("user", user);
         return modelAndView;
     }
 
     @PostMapping("/edit")
-    public ModelAndView editCar(@ModelAttribute("car") Car car){
+    public ModelAndView editUser(@ModelAttribute("user") User user){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/");
-        carService.edit(car);
+        userService.save(user);
         return modelAndView;
     }
 
@@ -48,15 +45,15 @@ public class CarController {
     public ModelAndView addPage(){
         ModelAndView  modelAndView = new ModelAndView();
         modelAndView.setViewName("addPage");
-        modelAndView.addObject("car",new Car());
+        modelAndView.addObject("user",new User());
         return modelAndView;
     }
 
     @PostMapping("/add")
-    public  ModelAndView addCar(@ModelAttribute("car") Car car){
+    public  ModelAndView addCar(@ModelAttribute("user") User user){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/");
-        carService.add(car);
+        userService.save(user);
         return modelAndView;
     }
 
@@ -64,8 +61,8 @@ public class CarController {
     public ModelAndView deleteCar(@PathVariable("id") int id){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/");
-        Car car = carService.getCarById(id);
-        carService.delete(car);
+        userService.delete(id);
         return modelAndView;
     }
+
 }

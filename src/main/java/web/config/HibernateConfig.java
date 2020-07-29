@@ -6,26 +6,38 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.orm.hibernate5.HibernateTransactionManager;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
-import web.model.Car;
 
-import javax.sql.DataSource;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import javax.persistence.EntityManagerFactory;
 import java.util.Properties;
 
 @Configuration
 @ComponentScan(value = "web")
 @EnableTransactionManagement
+@EnableJpaRepositories(basePackages = {"web"})
 @PropertySource("classpath:db.properties")
 public class HibernateConfig {
 
     @Autowired
     private Environment env;
 
+    private Properties hibernateProperties() {
+        Properties props = new Properties();
+        props.put("hibernate.dialect", env.getRequiredProperty("hibernate.dialect"));
+        props.put("hibernate.show_sql", env.getRequiredProperty("hibernate.show_sql"));
+        props.put("hibernate.hbm2ddl.auto", env.getRequiredProperty("hibernate.hbm2ddl.auto"));
+        return props;
+    }
+
     @Bean
-    public DataSource getDataSource() {
+    public DriverManagerDataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(env.getProperty("db.driver"));
         dataSource.setUrl(env.getProperty("db.url"));
@@ -35,24 +47,21 @@ public class HibernateConfig {
     }
 
     @Bean
-    public LocalSessionFactoryBean getSessionFactory() {
-        LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
-        factoryBean.setDataSource(getDataSource());
-
-        Properties props=new Properties();
-        props.put("hibernate.show_sql", env.getProperty("hibernate.show_sql"));
-        props.put("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
-        props.put("hibernate.dialect",env.getProperty("hibernate.dialect"));
-
-        factoryBean.setHibernateProperties(props);
-        factoryBean.setAnnotatedClasses(Car.class);
-        return factoryBean;
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(){
+        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        em.setDataSource(dataSource());
+        em.setPackagesToScan("web");
+        JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        em.setJpaVendorAdapter(vendorAdapter);
+        em.setJpaProperties(hibernateProperties());
+        return em;
     }
 
     @Bean
-    public HibernateTransactionManager getTransactionManager() {
-        HibernateTransactionManager transactionManager = new HibernateTransactionManager();
-        transactionManager.setSessionFactory(getSessionFactory().getObject());
+    public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(entityManagerFactory);
+
         return transactionManager;
     }
 }

@@ -3,17 +3,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Add Car</title>
+    <title>Add User</title>
 </head>
 <body>
-<h2>Add Car</h2>
+<h2>Add User</h2>
 
-<form action="#" th:action="@{/add}" th:object="${car}" method="post">
+<form action="#" th:action="@{/add}" th:object="${user}" method="post">
     <label for="name">Name</label>
     <input type="text" name="name" id="name" th:field="*{name}">
-    <label for="series"></label>
-    <input type="text" name="series" id="series" th:field="*{series}">
-    <input type="submit" value="Add Car">
+    <label for="password">Password</label>
+    <input type="text" name="password" id="password" th:field="*{password}">
+    <label for="age">Age</label>
+    <input type="text" name="age" id="age" th:field="*{age}">
+    <label for="email">Email</label>
+    <input type="email" name="email" id="email" th:field="*{email}">
+    <input type="submit" value="Add User">
 </form>
 </body>
 </html>
