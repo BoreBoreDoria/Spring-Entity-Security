@@ -1,83 +1,39 @@
 package web.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import web.model.User;
 import web.service.UserServiceEntity;
 
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    private UserServiceEntity userService;
+    private final UserServiceEntity userService;
 
     @GetMapping(value = "/")
-    public String getHomePage() {
-        return "index";
-    }
-
-    @GetMapping(value = "/login")
-    public String getLoginPage() {
-        return "login";
-    }
-
-    @GetMapping("/admin")
-    public ModelAndView allUsers(){
+    public ResponseEntity<String> getHomePage() {
         List<User> users = userService.listAll();
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("admin");
-        modelAndView.addObject("users",users);
-        return modelAndView;
+        return ResponseEntity.ok(users.toString());
     }
 
-    @GetMapping("/admin/edit/{id}")
-    public ModelAndView editPage(@PathVariable("id") int id){
-        User user = userService.get(id);
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("editPage");
-        modelAndView.addObject("user", user);
-        return modelAndView;
+    @GetMapping(value = "/email/{email}")
+    public ResponseEntity<String> getUserByEmail(@PathVariable("email") String email) {
+        return ResponseEntity.ok(userService.findByEmail(email).toString());
     }
 
-    @PostMapping("/admin/edit")
-    public ModelAndView editUser(@ModelAttribute("user") User user){
-        user.setRoles(userService.get(user.getId()).getRoles());
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/admin");
-        userService.save(user);
-        return modelAndView;
+    @GetMapping(value = "/email")
+    public ResponseEntity<String> getUserByNameAndEmail(@RequestParam("name") String name,
+                                                        @RequestParam("email") String email) {
+        return ResponseEntity.ok(userService.findUserByNameAndEmail(name, email).toString());
     }
 
-    @GetMapping("/admin/add")
-    public ModelAndView addPage(){
-        ModelAndView  modelAndView = new ModelAndView();
-        modelAndView.setViewName("addPage");
-        modelAndView.addObject("user",new User());
-        return modelAndView;
+    @GetMapping(value = "/email/all/{name}")
+    public ResponseEntity<String> getAllUserContainsName(@PathVariable("name") String name) {
+        return ResponseEntity.ok(userService.findAllByNameContaining(name).toString());
     }
-
-    @PostMapping("/admin/add")
-    public  ModelAndView addUser(@ModelAttribute("user") User user){
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/admin");
-        userService.save(user);
-        return modelAndView;
-    }
-
-    @GetMapping("/admin/delete/{id}")
-    public ModelAndView deleteUser(@PathVariable("id") int id){
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/admin");
-        userService.delete(id);
-        return modelAndView;
-    }
-    @GetMapping("/user")
-    public String userPage(){
-        return "user";
-    }
-
 }
