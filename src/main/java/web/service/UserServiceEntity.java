@@ -32,15 +32,31 @@ public class UserServiceEntity {
     repo.save(user);
   }
 
-  public User findByEmail(String email){
+  public User findByEmail(String email) {
     return repo.findUserByEmail(email);
   }
 
-  public User findUserByNameAndEmail(String name, String email){
+  public User findUserByNameAndEmail(String name, String email) {
     return repo.findUserByNameAndEmail(name, email);
   }
 
-  public List<User> findAllByNameContaining(String name){
+  public List<User> findAllByNameContaining(String name) {
     return repo.findAllByNameContaining(name);
+  }
+
+  public boolean existUser(String name, String password) {
+    return repo.existsUserByNameAndPassword(name, password);
+  }
+
+  public User getByName(String name) {
+    return repo.findUserByName(name);
+  }
+
+  public void addUser(User user) {
+    repo.save(user);
+  }
+
+  public void deleteUser(User user) {
+    repo.delete(user);
   }
 }

@@ -10,6 +10,7 @@ import web.service.UserServiceEntity;
 import java.util.List;
 
 @Controller
+@RequestMapping(value = "/user")
 @RequiredArgsConstructor
 public class UserController {
 
