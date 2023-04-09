@@ -2,7 +2,7 @@ package web.repository;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Optional;
+import java.util.List;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -33,8 +33,10 @@ public class ProductCreateService {
     int themeIndex = random.nextInt(themes.length);
     int productIndex = random.nextInt(products[themeIndex].length);
     Category category = categories.get(themeIndex);
+    Category category1 = categories.get(random.nextInt(themes.length));
     String product = products[themeIndex][productIndex];
-    return productService.save(new Product(product, BigDecimal.valueOf(random.nextInt(500)), category));
+    List<Category> categoryList = List.of(category, category1);
+    return productService.save(new Product(product, BigDecimal.valueOf(random.nextInt(500)), categoryList));
   }
 
   public void saveThemes() {

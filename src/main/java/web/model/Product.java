@@ -5,16 +5,35 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.repository.EntityGraph;
+
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedSubgraph;
 import javax.persistence.Table;
 
+@NamedEntityGraph(
+    name = "product.categories",
+    attributeNodes = {
+        @NamedAttributeNode("name"),
+        @NamedAttributeNode(value = "categories", subgraph = "categories.subcategories")
+    },
+    subgraphs = {
+        @NamedSubgraph(
+            name = "categories.subcategories",
+            attributeNodes = {
+                @NamedAttributeNode("name"),
+                @NamedAttributeNode("subCategories")
+            }
+            )
+    }
+)
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,13 +46,17 @@ public class Product {
   private String name;
   private BigDecimal price;
 
-  @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "category_id")
-  private Category category;
+  @ManyToMany
+  private List<Category> categories;
 
-  public Product(String name, BigDecimal price, Category category) {
+  public Product(String name, BigDecimal price) {
     this.name = name;
     this.price = price;
-    this.category = category;
+  }
+
+  public Product(String name, BigDecimal price, List<Category> categories) {
+    this.name = name;
+    this.price = price;
+    this.categories = categories;
   }
 }

@@ -42,12 +42,6 @@ public class ProductController {
     return ResponseEntity.ok(randomProductAndTheme.toString());
   }
 
-  @GetMapping(value = "/findProductByCategory")
-  public ResponseEntity<String> findProductByCategory(@RequestParam String category) {
-    Pageable pageable = PageRequest.of(0,4, Sort.by("price").ascending());
-    return ResponseEntity.ok(productService.findByCategoryName(category,pageable).toString());
-  }
-
   @GetMapping(value = "/findProductByPrice")
   public ResponseEntity<String> findProductByPrice(@RequestParam BigDecimal price) {
     Pageable pageable = PageRequest.of(0,4, Sort.by("price").ascending());
@@ -68,5 +62,11 @@ public class ProductController {
       }
     }
     return ResponseEntity.ok(all.toString());
+  }
+
+  @GetMapping(value = "/getProduct/{id}")
+  public ResponseEntity<String> getProductByID(@PathVariable Long id) {
+    Product product = productService.findByIdWithSubCategory(id);
+    return ResponseEntity.ok(product.toString());
   }
 }

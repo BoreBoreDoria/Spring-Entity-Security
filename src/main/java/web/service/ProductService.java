@@ -37,11 +37,12 @@ public class ProductService {
     productRepository.delete(product);
   }
 
-  public List<Product> findByCategoryName(String category, Pageable pageable) {
-    return productRepository.findByCategoryName(category, pageable);
-  }
 
   public Page<Product> findByPrice(BigDecimal price, Pageable pageable) {
     return productRepository.findByPriceGreaterThan(price, pageable);
+  }
+
+  public Product findByIdWithSubCategory(Long id) {
+    return productRepository.findById(id).get();
   }
 }
