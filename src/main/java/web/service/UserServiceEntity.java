@@ -1,5 +1,6 @@
 package web.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,12 +18,11 @@ import java.util.Set;
 
 @Service
 @Transactional
-public class UserServiceEntity implements UserDetailsService {
+@RequiredArgsConstructor
+public class UserServiceEntity implements UserDetailsService, UserService {
 
-    @Autowired
-    UserRepository repo;
-    @Autowired
-    RoleRepository rolRepo;
+    private final UserRepository repo;
+    private final RoleRepository rolRepo;
 
     public void save(User user) {
         Set<Role> roles = new HashSet<>();

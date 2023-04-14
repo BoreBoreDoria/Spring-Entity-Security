@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.springframework.org/security">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.springframework.org/security"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/security ">
 <head>
     <meta charset="UTF-8">
     <title>Welcome</title>
@@ -11,12 +14,14 @@
     <h1>Welcome my Admin APP</h1>
 
     <sec:authorize access="!isAuthenticated()">
-        <p><a class="btn btn-lg btn-success" th:href="@{/login}" />" role="button">Войти</a></p>
+        <p><a class="btn btn-lg btn-success" th:href="@{/login}"/>" role="button">Войти</a></p>
     </sec:authorize>
 
     <sec:authorize access="isAuthenticated()">
-        <p>Ваш логин: <sec:authentication property="principal.username" /></p>
-        <p><a class="btn btn-lg btn-danger" th:href="@{/logout}" />" role="button">Выйти</a></p>
+        <p>Ваш логин:
+            <sec:authentication property="principal.username"/>
+        </p>
+        <p><a class="btn btn-lg btn-danger" th:href="@{/logout}"/>" role="button">Выйти</a></p>
     </sec:authorize>
 
 </div>

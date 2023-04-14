@@ -1,19 +1,21 @@
 package web.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import web.model.User;
+import web.service.UserService;
 import web.service.UserServiceEntity;
 
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    private UserServiceEntity userService;
+    private final UserService userService;
 
     @GetMapping(value = "/")
     public String getHomePage() {
@@ -25,6 +27,10 @@ public class UserController {
         return "login";
     }
 
+    @GetMapping(value = "/user")
+    public String getUserPage() {
+        return "user";
+    }
     @GetMapping("/admin")
     public ModelAndView allUsers(){
         List<User> users = userService.listAll();
@@ -74,6 +80,4 @@ public class UserController {
         userService.delete(id);
         return modelAndView;
     }
-
-
 }
